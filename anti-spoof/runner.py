@@ -28,7 +28,7 @@ class IRunnerMixin(IRunner):
         return ToTensor()
 
     def get_datasets(
-        self, stage: str, num_samples_per_class: int = None
+            self, stage: str, num_samples_per_class: int = None
     ) -> "OrderedDict[str, Dataset]":
         """Provides train/validation datasets from MNIST dataset."""
         num_samples_per_class = num_samples_per_class or 320
@@ -54,5 +54,6 @@ class IRunnerMixin(IRunner):
 
 class CustomSupervisedConfigRunner(IRunnerMixin, SupervisedConfigRunner):
     pass
+
 
 __all__ = ["CustomSupervisedConfigRunner"]

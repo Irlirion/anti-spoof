@@ -9,18 +9,20 @@ shared:
 
 
 args:
-  expdir: "mnist_stages"
-  logdir: &logdir "./logs/mnist_stages"
+  expdir: "bin"
+  logdir: &logdir "./logs/test_1"
   seed: *seed
   distributed: False
   apex: False
   amp: False
-  verbose: False
+  fp16: False
+  verbose: True
   timeit: False
   check: False
   overfit: False
   deterministic: True
   benchmark: True
+  load_best_on_end: True
 
 runner:
   _target_: CustomSupervisedConfigRunner
@@ -93,3 +95,23 @@ stages:
         use_logdir_postfix: True
 #      verbose:
 #        _target_: TqdmCallback
+  tune:
+    num_epochs: 4
+
+    loaders: *loaders
+
+    criterion:
+      _target_: CrossEntropyLoss
+
+    optimizer:
+      _target_: SGD
+      lr: 1e-3
+      momentum: 0.9
+
+
+    scheduler:
+      _target_: MultiStepLR
+      milestones: [ 2 ]
+      gamma: 0.3
+
+    callbacks: *callbacks
