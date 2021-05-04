@@ -9,7 +9,7 @@ shared:
 
 
 args:
-  expdir: "bin"
+  expdir: "./anti-spoof"
   logdir: &logdir "./logs/test_1"
   seed: *seed
   distributed: False
