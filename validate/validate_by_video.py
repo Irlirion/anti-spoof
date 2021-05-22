@@ -19,7 +19,7 @@ def predict_video(path: str, detector, face_aligner: FaceAligner,
 
     frame_width = int(video_capture.get(3))
     frame_height = int(video_capture.get(4))
-    splited_path = path.split(".")
+    splited_path = path.split(os.sep)[-1].split(".")
     splited_path[-1] = "-out.avi"
 
     output_path = "".join(path.split(".")[:-1]) + "-out"
