@@ -102,7 +102,7 @@ if __name__ == '__main__':
 
     detector = dlib.get_frontal_face_detector() if args['device'] == 'cpu' else \
         dlib.cnn_face_detection_model_v1(args['cnn_detector_path'])
-    predictor = dlib.shape_predictor(args['shape_predictor'])
+    predictor = dlib.shape_predictor(args['shape_predictor_path'])
     face_aligner = FaceAligner(predictor, desiredFaceWidth=args['face_width'])
     classifier = cv2.dnn.readNetFromONNX(args['model_path'])
 
