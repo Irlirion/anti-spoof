@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import os
 
-from validate.utils import FaceAligner
+from utils import FaceAligner
 
 
 def softmax(x):

@@ -1,39 +1,39 @@
 import numpy as np
 import cv2
-from validate.helpers import FACIAL_LANDMARKS_68_IDXS
-from validate.helpers import FACIAL_LANDMARKS_5_IDXS
-from validate.helpers import shape_to_np
+from helpers import FACIAL_LANDMARKS_68_IDXS
+from helpers import FACIAL_LANDMARKS_5_IDXS
+from helpers import shape_to_np
 
 
-def align_face(detections, img_rgb):
-    pad_scale = 0.8
-
-    detection = detections[0]
-    left_eye = detection["left_eye"]
-    right_eye = detection["right_eye"]
-
-    h = detection['y2'] - detection['y1']
-    w = detection['x2'] - detection['x1']
-    x = detection['x1']
-    y = detection['y1']
-    real_h = img_rgb.shape[0]
-    real_w = img_rgb.shape[1]
-
-    h_pad = h + int(h * pad_scale)
-    w_pad = w + int(w * pad_scale)
-    x_pad = x - int(w * pad_scale / 2)
-    y_pad = y - int(h * pad_scale / 2)
-
-    y1_pad = 0 if y_pad < 0 else y_pad
-    x1_pad = 0 if x_pad < 0 else x_pad
-    y2_pad = real_h if y1_pad + h_pad > real_h else y_pad + h_pad
-    x2_pad = real_w if x1_pad + w_pad > real_w else x_pad + w_pad
-
-    # img = img_rgb[detection['y1']:detection['y2'], detection['x1']:detection['x2'], :]
-    img = img_rgb[y1_pad:y2_pad, x1_pad:x2_pad, :]
-    if img.shape[0] > 0 and img.shape[1] > 0:
-        img = alignment_procedure(img, left_eye, right_eye)
-        return img
+# def align_face(detections, img_rgb):
+#     pad_scale = 0.8
+#
+#     detection = detections[0]
+#     left_eye = detection["left_eye"]
+#     right_eye = detection["right_eye"]
+#
+#     h = detection['y2'] - detection['y1']
+#     w = detection['x2'] - detection['x1']
+#     x = detection['x1']
+#     y = detection['y1']
+#     real_h = img_rgb.shape[0]
+#     real_w = img_rgb.shape[1]
+#
+#     h_pad = h + int(h * pad_scale)
+#     w_pad = w + int(w * pad_scale)
+#     x_pad = x - int(w * pad_scale / 2)
+#     y_pad = y - int(h * pad_scale / 2)
+#
+#     y1_pad = 0 if y_pad < 0 else y_pad
+#     x1_pad = 0 if x_pad < 0 else x_pad
+#     y2_pad = real_h if y1_pad + h_pad > real_h else y_pad + h_pad
+#     x2_pad = real_w if x1_pad + w_pad > real_w else x_pad + w_pad
+#
+#     # img = img_rgb[detection['y1']:detection['y2'], detection['x1']:detection['x2'], :]
+#     img = img_rgb[y1_pad:y2_pad, x1_pad:x2_pad, :]
+#     if img.shape[0] > 0 and img.shape[1] > 0:
+#         # img = alignment_procedure(img, left_eye, right_eye)
+#         return img
 
 
 class FaceAligner:
@@ -117,8 +117,6 @@ if __name__ == '__main__':
 
     img = cv2.imread("resources/face.jpeg")
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    # cv2.imshow("Aligned", alignment_procedure(img, (161, 298), (262, 219)))
 
     p = "resources/shape_predictor_68_face_landmarks.dat"
     detector = dlib.get_frontal_face_detector()
