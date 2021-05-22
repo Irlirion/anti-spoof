@@ -33,7 +33,7 @@ class IRunnerMixin(IRunner):
         """Provides train/validation datasets from MNIST dataset."""
         num_samples_per_class = num_samples_per_class or 320
         datasets = OrderedDict()
-        for mode in ("train", "valid"):
+        for mode in ("train", "validate"):
             dataset = MNIST(
                 "./data",
                 train=(mode == "train"),
