@@ -11,6 +11,7 @@ def softmax(x):
     f_x = np.exp(x) / np.sum(np.exp(x))
     return f_x
 
+
 def predict_video(path: str, detector, face_aligner: FaceAligner,
                   classifier):
     labels = ("Live", "Spoof")
@@ -28,13 +29,9 @@ def predict_video(path: str, detector, face_aligner: FaceAligner,
                           25,
                           (frame_width, frame_height))
     print("Here")
-    n = 0
-    while video_capture.isOpened() and n < 10:
+    while video_capture.isOpened():
         success, frame = video_capture.read()
-        n += 1
-        print(n)
         if not success:
-            print("File not found")
             break
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         rects = detector(gray, 2)
@@ -85,14 +82,16 @@ if __name__ == '__main__':
                         help="path to model",
                         required=True,
                         type=str)
-    parser.add_argument("-p", "--shape-predictor", required=False,
-                        default="resources/shape_predictor_5_face_landmarks.dat",
+    parser.add_argument("-p", "--shape-predictor-path", required=True,
                         help="path to facial landmark predictor")
     parser.add_argument("-w", "--face-width", required=False,
                         default=224,
                         help="output face width")
     parser.add_argument('-d', '--device', required=False,
-                        default='cpu', choices=['cpu', 'cuda'])
+                        default='cpu', choices=['cpu', 'cuda'],
+                        help='type of device for predict')
+    parser.add_argument('-c', '--cnn-detector-path', required=False,
+                        default='', help="path to cnn detector path if device is cuda")
     parser.add_argument('VIDEOS',
                         help="one or more path to videos",
                         type=str,
@@ -102,9 +101,10 @@ if __name__ == '__main__':
     args = vars(parser.parse_args())
 
     detector = dlib.get_frontal_face_detector() if args['device'] == 'cpu' else \
-        dlib.cnn_face_detection_model_v1("resources/mmod_human_face_detector.dat")
+        dlib.cnn_face_detection_model_v1(args['cnn_detector_path'])
     predictor = dlib.shape_predictor(args['shape_predictor'])
     face_aligner = FaceAligner(predictor, desiredFaceWidth=args['face_width'])
     classifier = cv2.dnn.readNetFromONNX(args['model_path'])
+
     for video in args['VIDEOS']:
         predict_video(video, detector, face_aligner, classifier)
